@@ -1,5 +1,12 @@
 package frc.robot.subsystems.intake.intakePivot;
 
-public class IntakePivotIO {
-    
+import org.littletonrobotics.junction.AutoLog;
+
+public interface IntakePivotIO {
+    @AutoLog
+    public static class IntakePivotIOInputs {
+        
+    }
+
+    default void updateInputs(IntakePivotIOInputs inputs) {}
 }
