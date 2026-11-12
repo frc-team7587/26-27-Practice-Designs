@@ -1,5 +1,12 @@
 package frc.robot.subsystems.conveyor;
 
-public class ConveyorIO {
-    
+import org.littletonrobotics.junction.AutoLog;
+
+public interface ConveyorIO {
+    @AutoLog
+    public static class ConveyorIOInputs {
+        
+    }
+
+    default void updateInputs(ConveyorIOInputs inputs) {}
 }
