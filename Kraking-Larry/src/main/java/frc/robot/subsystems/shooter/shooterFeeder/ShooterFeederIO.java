@@ -1,5 +1,12 @@
 package frc.robot.subsystems.shooter.shooterFeeder;
 
-public class ShooterFeederIO {
-    
+import org.littletonrobotics.junction.AutoLog;
+
+public interface ShooterFeederIO {
+    @AutoLog
+    public static class ShooterFeederIOInputs {
+
+    }
+
+    default void updateInputs(ShooterFeederIOInputs inputs) {}
 }
