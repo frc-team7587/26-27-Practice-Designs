@@ -1,5 +1,3 @@
 package frc.robot;
 
-public class Configs {
-    
-}
+public class Configs {}
