@@ -36,4 +36,57 @@ public class Intake extends SubsystemBase {
     this.rollerIO = rollerIO;
     this.pivotIO = pivotIO;
   }
+
+  @Override
+  public void periodic() {
+    rollerIO.updateInputs(rollerInputs);
+    pivotIO.updateInputs(pivotInputs);
+
+    Logger.processInputs("Intake/Roller", rollerInputs);
+    Logger.processInputs("Intake/Pivot", pivotInputs);
+
+    rollerDisconnectedAlert.set(!rollerInputs.connected);
+    pivotDisconnectedAlert.set(!pivotInputs.connected);
+  }
+
+  public void runRollers(Voltage voltage) {
+    rollerIO.setVoltage(voltage);
+  }
+
+  public void stopRollers() {
+    rollerIO.stop();
+  }
+
+  public void runPivotVolts(Voltage voltage) {
+    pivotIO.setVoltage(voltage);
+  }
+
+  public void setPivotPosition(Rotation2d position) {
+    pivotIO.setPosition(position);
+  }
+
+  public void stopPivot() {
+    setPivotPosition(getPivotPosition());
+  }
+
+  public void stop() {
+    stopRollers();
+    stopPivot();
+  }
+
+  public Rotation2d getPivotPosition() {
+    return pivotInputs.position;
+  }
+
+  public Command runRollersCommand(Voltage voltage) {
+    return Commands.startEnd(() -> runRollers(voltage), this::stopRollers, this);
+  }
+
+  public Command setPivotPositionCommand(Rotation2d position) {
+    return Commands.runOnce(() -> setPivotPosition(position), this);
+  }
+
+  public Command runPivotVoltsCommand(Voltage voltage) {
+    return Commands.startEnd(() -> runPivotVolts(voltage), this::stopPivot, this);
+  }
 }
