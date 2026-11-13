@@ -28,11 +28,10 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.intake.intakePivot.IntakePivot;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIOTalonFX;
-import frc.robot.subsystems.intake.intakeRoller.IntakeRoller;
 import frc.robot.subsystems.intake.intakeRoller.IntakeRollerIO;
 import frc.robot.subsystems.intake.intakeRoller.IntakeRollerIOSim;
 import frc.robot.subsystems.intake.intakeRoller.IntakeRollerIOTalonFX;
@@ -65,8 +64,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Conveyor conveyor;
-  private final IntakePivot intakePivot;
-  private final IntakeRoller intakeRoller;
+  private final Intake intake;
   private final ShooterFeeder shooterFeeder;
   private final ShooterPivot shooterPivot;
   private final ShooterFlywheel shooterFlywheel;
@@ -113,8 +111,7 @@ public class RobotContainer {
 
         // other subsystems
         conveyor = new Conveyor(new ConveyorIOTalonFX());
-        intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-        intakeRoller = new IntakeRoller(new IntakeRollerIOTalonFX());
+        intake = new Intake(new IntakeRollerIOTalonFX(), new IntakePivotIOTalonFX());
         shooterFeeder = new ShooterFeeder(new ShooterFeederIOTalonFX());
         shooterPivot = new ShooterPivot(new ShooterPivotIOTalonFx());
         shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
@@ -138,8 +135,7 @@ public class RobotContainer {
 
         // other subsystems
         conveyor = new Conveyor(new ConveyorIOSim());
-        intakePivot = new IntakePivot(new IntakePivotIOSim());
-        intakeRoller = new IntakeRoller(new IntakeRollerIOSim());
+        intake = new Intake(new IntakeRollerIOSim(), new IntakePivotIOSim());
         shooterFeeder = new ShooterFeeder(new ShooterFeederIOSim());
         shooterPivot = new ShooterPivot(new ShooterPivotIOSim());
         shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
@@ -166,8 +162,7 @@ public class RobotContainer {
 
         // other subsystems
         conveyor = new Conveyor(new ConveyorIO() {});
-        intakePivot = new IntakePivot(new IntakePivotIO() {});
-        intakeRoller = new IntakeRoller(new IntakeRollerIO() {});
+        intake = new Intake(new IntakeRollerIO() {}, new IntakePivotIO() {});
         shooterFeeder = new ShooterFeeder(new ShooterFeederIO() {});
         shooterPivot = new ShooterPivot(new ShooterPivotIO() {});
         shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
