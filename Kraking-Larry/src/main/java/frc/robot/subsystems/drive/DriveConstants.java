@@ -2,13 +2,13 @@ package frc.robot.subsystems.drive;
 
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
-    public static final double kInitChassisSpeed = 1;
+  public static final double kInitChassisSpeed = 1;
 
   public static final double alignMaxSpeed = 3;
   public static final double alignMaxAngularSpeed = 3.0 * Math.PI;

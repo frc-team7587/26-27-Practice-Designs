@@ -1,15 +1,9 @@
-// Copyright 2021-2025 Team 7587 Metuchen Momentum
-// https://github.com/frc-team7587
+// Copyright (c) 2021-2026 Littleton Robotics
+// http://github.com/Mechanical-Advantage
 //
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
+// Use of this source code is governed by a BSD
+// license that can be found in the LICENSE file
+// at the root directory of this project.
 
 package frc.robot.subsystems.vision;
 
@@ -33,12 +27,9 @@ public class VisionIOLimelight implements VisionIO {
   private final Supplier<Rotation2d> rotationSupplier;
   private final DoubleArrayPublisher orientationPublisher;
 
-  private final DoubleSubscriber validTargetSubscriber;
-  private final DoubleSubscriber tidSubscriber;
   private final DoubleSubscriber latencySubscriber;
   private final DoubleSubscriber txSubscriber;
   private final DoubleSubscriber tySubscriber;
-  private final DoubleArraySubscriber targetPoseRobotSpaceSubscriber;
   private final DoubleArraySubscriber megatag1Subscriber;
   private final DoubleArraySubscriber megatag2Subscriber;
 
@@ -52,13 +43,9 @@ public class VisionIOLimelight implements VisionIO {
     var table = NetworkTableInstance.getDefault().getTable(name);
     this.rotationSupplier = rotationSupplier;
     orientationPublisher = table.getDoubleArrayTopic("robot_orientation_set").publish();
-    validTargetSubscriber = table.getDoubleTopic("tv").subscribe(0.0);
-    tidSubscriber = table.getDoubleTopic("tid").subscribe(-1.0);
     latencySubscriber = table.getDoubleTopic("tl").subscribe(0.0);
     txSubscriber = table.getDoubleTopic("tx").subscribe(0.0);
     tySubscriber = table.getDoubleTopic("ty").subscribe(0.0);
-    targetPoseRobotSpaceSubscriber =
-        table.getDoubleArrayTopic("targetpose_robotspace").subscribe(new double[] {});
     megatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
     megatag2Subscriber =
         table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
@@ -66,28 +53,15 @@ public class VisionIOLimelight implements VisionIO {
 
   @Override
   public void updateInputs(VisionIOInputs inputs) {
-    // Update connection status based on whether an update has been seen in the last 250ms
+    // Update connection status based on whether an update has been seen in the last
+    // 250ms
     inputs.connected =
         ((RobotController.getFPGATime() - latencySubscriber.getLastChange()) / 1000) < 250;
-
-    double[] targetPoseRobotSpace = targetPoseRobotSpaceSubscriber.get();
-    double distanceMeters = Double.NaN;
-    if (targetPoseRobotSpace.length >= 3) {
-      distanceMeters =
-          Math.sqrt(
-              targetPoseRobotSpace[0] * targetPoseRobotSpace[0]
-                  + targetPoseRobotSpace[1] * targetPoseRobotSpace[1]
-                  + targetPoseRobotSpace[2] * targetPoseRobotSpace[2]);
-    }
 
     // Update target observation
     inputs.latestTargetObservation =
         new TargetObservation(
-            validTargetSubscriber.get() > 0.5,
-            (int) Math.round(tidSubscriber.get()),
-            distanceMeters,
-            Rotation2d.fromDegrees(txSubscriber.get()),
-            Rotation2d.fromDegrees(tySubscriber.get()));
+            Rotation2d.fromDegrees(txSubscriber.get()), Rotation2d.fromDegrees(tySubscriber.get()));
 
     // Update orientation for MegaTag 2
     orientationPublisher.accept(
@@ -105,11 +79,23 @@ public class VisionIOLimelight implements VisionIO {
       }
       poseObservations.add(
           new PoseObservation(
+              // Timestamp, based on server timestamp of publish and latency
               rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
+
+              // 3D pose estimate
               parsePose(rawSample.value),
+
+              // Ambiguity, using only the first tag because ambiguity isn't applicable for
+              // multitag
               rawSample.value.length >= 18 ? rawSample.value[17] : 0.0,
+
+              // Tag count
               (int) rawSample.value[7],
+
+              // Average tag distance
               rawSample.value[9],
+
+              // Observation type
               PoseObservationType.MEGATAG_1));
     }
     for (var rawSample : megatag2Subscriber.readQueue()) {
@@ -119,19 +105,32 @@ public class VisionIOLimelight implements VisionIO {
       }
       poseObservations.add(
           new PoseObservation(
+              // Timestamp, based on server timestamp of publish and latency
               rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
+
+              // 3D pose estimate
               parsePose(rawSample.value),
+
+              // Ambiguity, zeroed because the pose is already disambiguated
               0.0,
+
+              // Tag count
               (int) rawSample.value[7],
+
+              // Average tag distance
               rawSample.value[9],
+
+              // Observation type
               PoseObservationType.MEGATAG_2));
     }
 
+    // Save pose observations to inputs object
     inputs.poseObservations = new PoseObservation[poseObservations.size()];
     for (int i = 0; i < poseObservations.size(); i++) {
       inputs.poseObservations[i] = poseObservations.get(i);
     }
 
+    // Save tag IDs to inputs objects
     inputs.tagIds = new int[tagIds.size()];
     int i = 0;
     for (int id : tagIds) {

@@ -49,7 +49,10 @@ import frc.robot.subsystems.shooter.shooterPivot.ShooterPivotIO;
 import frc.robot.subsystems.shooter.shooterPivot.ShooterPivotIOSim;
 import frc.robot.subsystems.shooter.shooterPivot.ShooterPivotIOTalonFx;
 import frc.robot.subsystems.vision.Vision;
-
+import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -89,7 +92,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-        
+
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
         // implementations
@@ -108,13 +111,18 @@ public class RobotContainer {
         // new ModuleIOTalonFXS(TunerConstants.BackLeft),
         // new ModuleIOTalonFXS(TunerConstants.BackRight));
 
-        //other subsystems
+        // other subsystems
         conveyor = new Conveyor(new ConveyorIOTalonFX());
         intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
         intakeRoller = new IntakeRoller(new IntakeRollerIOTalonFX());
         shooterFeeder = new ShooterFeeder(new ShooterFeederIOTalonFX());
         shooterPivot = new ShooterPivot(new ShooterPivotIOTalonFx());
         shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOLimelight(VisionConstants.camera0Name, drive::getRotation),
+                new VisionIOLimelight(VisionConstants.camera1Name, drive::getRotation));
 
         break;
 
@@ -127,15 +135,23 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        
-        //other subsystems
+
+        // other subsystems
         conveyor = new Conveyor(new ConveyorIOSim());
         intakePivot = new IntakePivot(new IntakePivotIOSim());
         intakeRoller = new IntakeRoller(new IntakeRollerIOSim());
         shooterFeeder = new ShooterFeeder(new ShooterFeederIOSim());
         shooterPivot = new ShooterPivot(new ShooterPivotIOSim());
         shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
-        
+
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose),
+                new VisionIOPhotonVisionSim(
+                    VisionConstants.camera1Name, VisionConstants.robotToCamera1, drive::getPose));
+
         break;
 
       default:
@@ -148,13 +164,15 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
 
-        //other subsystems
+        // other subsystems
         conveyor = new Conveyor(new ConveyorIO() {});
         intakePivot = new IntakePivot(new IntakePivotIO() {});
         intakeRoller = new IntakeRoller(new IntakeRollerIO() {});
         shooterFeeder = new ShooterFeeder(new ShooterFeederIO() {});
         shooterPivot = new ShooterPivot(new ShooterPivotIO() {});
         shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
+
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
         break;
     }

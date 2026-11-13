@@ -1,5 +1,3 @@
 package frc.robot.subsystems.intake.intakePivot;
 
-public class IntakePivotConstants {
-    
-}
+public class IntakePivotConstants {}

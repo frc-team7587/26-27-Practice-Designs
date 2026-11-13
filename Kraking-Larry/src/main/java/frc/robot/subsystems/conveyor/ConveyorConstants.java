@@ -1,5 +1,3 @@
 package frc.robot.subsystems.conveyor;
 
-public class ConveyorConstants {
-    
-}
+public class ConveyorConstants {}

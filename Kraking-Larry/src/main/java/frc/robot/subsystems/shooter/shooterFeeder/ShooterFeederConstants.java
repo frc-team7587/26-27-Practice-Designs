@@ -1,5 +1,3 @@
 package frc.robot.subsystems.shooter.shooterFeeder;
 
-public class ShooterFeederConstants {
-    
-}
+public class ShooterFeederConstants {}

@@ -1,5 +1,3 @@
 package frc.robot.subsystems.shooter.shooterFlywheel;
 
-public class ShooterFlywheelConstants {
-    
-}
+public class ShooterFlywheelConstants {}

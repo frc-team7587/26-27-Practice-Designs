@@ -3,10 +3,8 @@ package frc.robot.subsystems.intake.intakePivot;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface IntakePivotIO {
-    @AutoLog
-    public static class IntakePivotIOInputs {
-        
-    }
+  @AutoLog
+  public static class IntakePivotIOInputs {}
 
-    default void updateInputs(IntakePivotIOInputs inputs) {}
+  default void updateInputs(IntakePivotIOInputs inputs) {}
 }

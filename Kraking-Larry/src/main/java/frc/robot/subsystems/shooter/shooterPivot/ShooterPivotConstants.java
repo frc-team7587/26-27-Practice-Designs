@@ -1,5 +1,3 @@
 package frc.robot.subsystems.shooter.shooterPivot;
 
-public class ShooterPivotConstants {
-    
-}
+public class ShooterPivotConstants {}
