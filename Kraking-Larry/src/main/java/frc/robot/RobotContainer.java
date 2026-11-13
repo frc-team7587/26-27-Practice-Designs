@@ -18,12 +18,38 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.conveyor.Conveyor;
+import frc.robot.subsystems.conveyor.ConveyorIO;
+import frc.robot.subsystems.conveyor.ConveyorIOSim;
+import frc.robot.subsystems.conveyor.ConveyorIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.intake.intakePivot.IntakePivot;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.intakeRoller.IntakeRoller;
+import frc.robot.subsystems.intake.intakeRoller.IntakeRollerIO;
+import frc.robot.subsystems.intake.intakeRoller.IntakeRollerIOSim;
+import frc.robot.subsystems.intake.intakeRoller.IntakeRollerIOTalonFX;
+import frc.robot.subsystems.shooter.shooterFeeder.ShooterFeeder;
+import frc.robot.subsystems.shooter.shooterFeeder.ShooterFeederIO;
+import frc.robot.subsystems.shooter.shooterFeeder.ShooterFeederIOSim;
+import frc.robot.subsystems.shooter.shooterFeeder.ShooterFeederIOTalonFX;
+import frc.robot.subsystems.shooter.shooterFlywheel.ShooterFlywheel;
+import frc.robot.subsystems.shooter.shooterFlywheel.ShooterFlywheelIO;
+import frc.robot.subsystems.shooter.shooterFlywheel.ShooterFlywheelIOSim;
+import frc.robot.subsystems.shooter.shooterFlywheel.ShooterFlywheelIOTalonFX;
+import frc.robot.subsystems.shooter.shooterPivot.ShooterPivot;
+import frc.robot.subsystems.shooter.shooterPivot.ShooterPivotIO;
+import frc.robot.subsystems.shooter.shooterPivot.ShooterPivotIOSim;
+import frc.robot.subsystems.shooter.shooterPivot.ShooterPivotIOTalonFx;
+import frc.robot.subsystems.vision.Vision;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -35,6 +61,13 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Conveyor conveyor;
+  private final IntakePivot intakePivot;
+  private final IntakeRoller intakeRoller;
+  private final ShooterFeeder shooterFeeder;
+  private final ShooterPivot shooterPivot;
+  private final ShooterFlywheel shooterFlywheel;
+  private final Vision vision;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -56,7 +89,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-
+        
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
         // implementations
@@ -74,6 +107,15 @@ public class RobotContainer {
         // new ModuleIOTalonFXS(TunerConstants.FrontRight),
         // new ModuleIOTalonFXS(TunerConstants.BackLeft),
         // new ModuleIOTalonFXS(TunerConstants.BackRight));
+
+        //other subsystems
+        conveyor = new Conveyor(new ConveyorIOTalonFX());
+        intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+        intakeRoller = new IntakeRoller(new IntakeRollerIOTalonFX());
+        shooterFeeder = new ShooterFeeder(new ShooterFeederIOTalonFX());
+        shooterPivot = new ShooterPivot(new ShooterPivotIOTalonFx());
+        shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+
         break;
 
       case SIM:
@@ -85,6 +127,15 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        
+        //other subsystems
+        conveyor = new Conveyor(new ConveyorIOSim());
+        intakePivot = new IntakePivot(new IntakePivotIOSim());
+        intakeRoller = new IntakeRoller(new IntakeRollerIOSim());
+        shooterFeeder = new ShooterFeeder(new ShooterFeederIOSim());
+        shooterPivot = new ShooterPivot(new ShooterPivotIOSim());
+        shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIOSim());
+        
         break;
 
       default:
@@ -96,6 +147,15 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+
+        //other subsystems
+        conveyor = new Conveyor(new ConveyorIO() {});
+        intakePivot = new IntakePivot(new IntakePivotIO() {});
+        intakeRoller = new IntakeRoller(new IntakeRollerIO() {});
+        shooterFeeder = new ShooterFeeder(new ShooterFeederIO() {});
+        shooterPivot = new ShooterPivot(new ShooterPivotIO() {});
+        shooterFlywheel = new ShooterFlywheel(new ShooterFlywheelIO() {});
+
         break;
     }
 
